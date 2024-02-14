@@ -1,10 +1,11 @@
-from flet import Page, RouteChangeEvent, Row, VerticalDivider
+from flet import Container, Page, RouteChangeEvent, Row, VerticalDivider, alignment
 
 from components import NavRail
 from databases import Location, Staff
 from views import *
 
 app = Row(expand=True)
+body = Container(expand=True, alignment=alignment.center)
 routes = {
     "/": Dashboard,
     "/dsr": DSR,
@@ -21,7 +22,7 @@ class Router:
         self.page = page
         self.page.on_route_change = self.route_change
         self.rail = NavRail(self.page)
-        app.controls = [self.rail, VerticalDivider(width=1), routes["/"](self.page)]
+        app.controls = [self.rail, VerticalDivider(width=1), body]
 
         self.initial_route()
         self.page.add(app)
@@ -33,7 +34,7 @@ class Router:
     def initial_route(self):
         if not self.config:
             self.rail.selected_index = None
-            app.controls[2] = routes["/noconfig"](self.page)
+            body.content = routes["/noconfig"](self.page)
 
     def route_change(self, event: RouteChangeEvent):
         if not self.config and event.route != "/settings":
@@ -41,5 +42,5 @@ class Router:
             r = "/noconfig"
         else:
             r = event.route
-        app.controls[2] = routes[r](self.page)
+        body.content = routes[r](self.page)
         self.page.update()
