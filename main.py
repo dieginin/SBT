@@ -1,6 +1,6 @@
 from flet import Page, Theme, app
 
-from core import Router
+from router import Router
 
 
 class Main:
